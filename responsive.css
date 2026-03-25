@@ -1,0 +1,192 @@
+/* Tablets */
+@media (max-width: 768px) {
+    .temperature-display .display-1 {
+        font-size: 3rem;
+    }
+
+    .weather-icon {
+        font-size: 3.5rem;
+    }
+
+    .search-section .input-group-lg .form-control,
+    .search-section .input-group-lg .btn {
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+    }
+
+    .current-weather-card .row {
+        flex-direction: column;
+    }
+
+    .forecast-card {
+        padding: 1rem;
+    }
+
+    .hourly-item {
+        min-width: 100px;
+    }
+}
+
+/* Mobile Phones */
+@media (max-width: 576px) {
+    .container-fluid {
+        padding: 0;
+    }
+
+    .container {
+        padding: 1rem;
+    }
+
+    .main-container {
+        padding-top: 0;
+    }
+
+    .search-section {
+        padding: 1rem 0;
+    }
+
+    .search-section .container {
+        padding: 0 0.75rem;
+    }
+
+    .search-section .input-group {
+        flex-direction: column;
+    }
+
+    .search-section input,
+    .search-section button {
+        border-radius: 8px !important;
+        width: 100%;
+    }
+
+    .search-section button {
+        margin-top: 0.5rem;
+    }
+
+    .weather-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .temperature-display {
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .temperature-display .display-1 {
+        font-size: 2.5rem;
+    }
+
+    .weather-icon {
+        font-size: 3rem;
+    }
+
+    .details-card .detail-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .forecast-card {
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .forecast-icon {
+        font-size: 2rem;
+    }
+
+    .hourly-item {
+        min-width: 90px;
+        padding: 0.75rem;
+    }
+
+    .hourly-icon {
+        font-size: 2rem;
+    }
+
+    h4 {
+        font-size: 1.2rem;
+    }
+
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+
+    .suggestions-list {
+        max-height: 250px;
+    }
+
+    .welcome-content {
+        padding: 0 1rem;
+    }
+
+    .sun-moon-section .row {
+        gap: 1rem;
+    }
+}
+
+/* Extra Small Devices */
+@media (max-width: 400px) {
+    .temperature-display .display-1 {
+        font-size: 2rem;
+    }
+
+    .unit-symbol {
+        font-size: 1.5rem;
+    }
+
+    .forecast-card {
+        padding: 0.5rem;
+    }
+
+    .detail-label {
+        font-size: 0.9rem;
+    }
+
+    .detail-value {
+        font-size: 1rem;
+    }
+
+    .navbar {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.5rem !important;
+        font-size: 0.8rem;
+    }
+}
+
+/* Dark Mode Transitions */
+body.dark-mode .weather-card {
+    background-color: var(--card-bg);
+}
+
+body.dark-mode .current-weather-card {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(16, 185, 129, 0.2));
+}
+
+body.dark-mode .details-card {
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(239, 68, 68, 0.2));
+}
+
+/* Print Styles */
+@media print {
+    .navbar,
+    .search-section,
+    .btn,
+    footer {
+        display: none;
+    }
+
+    body {
+        background-color: white;
+    }
+
+    .weather-card {
+        page-break-inside: avoid;
+    }
+}

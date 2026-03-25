@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Weather Dashboard - Real-time weather information">
+    <title>Weather Dashboard - Real-time Weather Information</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark bg-dark sticky-top shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#!">
+                <i class="fas fa-cloud-sun"></i> Weather Dashboard
+            </a>
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-outline-light" id="geoBtn" title="Use my location">
+                    <i class="fas fa-location-dot"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-light" id="unitsToggle" title="Toggle Celsius/Fahrenheit">
+                    <span id="unitText">°C</span>
+                </button>
+                <button class="btn btn-sm btn-outline-light" id="themeToggle" title="Toggle Dark/Light Mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container-fluid main-container">
+        <!-- Search Section -->
+        <section class="search-section py-4">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="input-group input-group-lg mb-3">
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="cityInput" 
+                                placeholder="Search for a city (e.g., New York, London, Mumbai)..." 
+                                autocomplete="off"
+                            >
+                            <button class="btn btn-primary" type="button" id="searchBtn">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                        </div>
+                        <!-- Autocomplete Suggestions -->
+                        <div id="suggestionsList" class="suggestions-list d-none"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Error Alert -->
+        <div id="errorAlert" class="alert alert-danger alert-dismissible fade d-none" role="alert">
+            <i class="fas fa-exclamation-circle"></i> <span id="errorMsg"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="text-center py-5 d-none">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3 text-muted">Fetching weather data...</p>
+        </div>
+
+        <!-- Weather Content (Hidden by default) -->
+        <div id="weatherContent" class="d-none">
+            <!-- Current Weather -->
+            <section class="current-weather-section py-4">
+                <div class="container">
+                    <div class="row">
+                        <!-- Main Weather Card -->
+                        <div class="col-lg-8">
+                            <div class="weather-card current-weather-card shadow-lg">
+                                <div class="row align-items-center">
+                                    <div class="col-md-6 text-center">
+                                        <div id="weatherIcon" class="weather-icon mb-3"></div>
+                                        <div id="weatherDescription" class="text-muted fs-5 mb-2"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="temperature-display">
+                                            <span id="currentTemp" class="display-1 fw-bold"></span>
+                                            <span class="unit-symbol">°<span id="unitSymbol">C</span></span>
+                                        </div>
+                                        <div id="locationInfo" class="fs-4 fw-600 mb-3"></div>
+                                        <div class="feels-like mb-3">
+                                            Feels like <span id="feelsLike" class="fw-bold"></span>°<span id="feelsLikeUnit">C</span>
+                                        </div>
+                                        <div id="updateTime" class="text-muted small"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Weather Details Card -->
+                        <div class="col-lg-4">
+                            <div class="weather-card details-card shadow-lg">
+                                <h5 class="mb-4">
+                                    <i class="fas fa-info-circle"></i> Details
+                                </h5>
+                                <div class="detail-item mb-3">
+                                    <div class="detail-label">
+                                        <i class="fas fa-droplet"></i> Humidity
+                                    </div>
+                                    <div class="detail-value" id="humidity"></div>
+                                </div>
+                                <div class="detail-item mb-3">
+                                    <div class="detail-label">
+                                        <i class="fas fa-wind"></i> Wind Speed
+                                    </div>
+                                    <div class="detail-value" id="windSpeed"></div>
+                                </div>
+                                <div class="detail-item mb-3">
+                                    <div class="detail-label">
+                                        <i class="fas fa-compass"></i> Wind Direction
+                                    </div>
+                                    <div class="detail-value" id="windDirection"></div>
+                                </div>
+                                <div class="detail-item mb-3">
+                                    <div class="detail-label">
+                                        <i class="fas fa-gauge"></i> Pressure
+                                    </div>
+                                    <div class="detail-value" id="pressure"></div>
+                                </div>
+                                <div class="detail-item mb-3">
+                                    <div class="detail-label">
+                                        <i class="fas fa-eye"></i> Visibility
+                                    </div>
+                                    <div class="detail-value" id="visibility"></div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">
+                                        <i class="fas fa-cloud"></i> Cloudiness
+                                    </div>
+                                    <div class="detail-value" id="cloudiness"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sun & Moon Times -->
+            <section class="sun-moon-section py-4">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="weather-card shadow-lg">
+                                <h5 class="mb-3">
+                                    <i class="fas fa-sun text-warning"></i> Sunrise & Sunset
+                                </h5>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="text-center">
+                                            <i class="fas fa-arrow-up fa-2x text-warning mb-2"></i>
+                                            <div class="small text-muted">Sunrise</div>
+                                            <div id="sunrise" class="fs-5 fw-bold"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="text-center">
+                                            <i class="fas fa-arrow-down fa-2x text-info mb-2"></i>
+                                            <div class="small text-muted">Sunset</div>
+                                            <div id="sunset" class="fs-5 fw-bold"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="weather-card shadow-lg">
+                                <h5 class="mb-3">
+                                    <i class="fas fa-temperature-half"></i> Temperature Range
+                                </h5>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="text-center">
+                                            <i class="fas fa-arrow-up fa-2x text-danger mb-2"></i>
+                                            <div class="small text-muted">Max Temp</div>
+                                            <div id="maxTemp" class="fs-5 fw-bold"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="text-center">
+                                            <i class="fas fa-arrow-down fa-2x text-primary mb-2"></i>
+                                            <div class="small text-muted">Min Temp</div>
+                                            <div id="minTemp" class="fs-5 fw-bold"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Hourly Forecast -->
+            <section class="hourly-forecast-section py-4">
+                <div class="container">
+                    <h4 class="mb-4">
+                        <i class="fas fa-clock"></i> Hourly Forecast (Next 24 Hours)
+                    </h4>
+                    <div class="hourly-forecast-container">
+                        <div id="hourlyForecast" class="row"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5-Day Forecast -->
+            <section class="forecast-section py-4">
+                <div class="container">
+                    <h4 class="mb-4">
+                        <i class="fas fa-calendar"></i> 5-Day Forecast
+                    </h4>
+                    <div id="forecastContainer" class="row"></div>
+                </div>
+            </section>
+
+            <!-- Weather Alerts -->
+            <section id="alertsSection" class="alerts-section py-4 d-none">
+                <div class="container">
+                    <h4 class="mb-4">
+                        <i class="fas fa-bell"></i> Weather Alerts
+                    </h4>
+                    <div id="alertsContainer"></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Welcome Screen (shown on initial load) -->
+        <div id="welcomeScreen" class="welcome-screen">
+            <div class="container text-center">
+                <div class="welcome-content">
+                    <i class="fas fa-cloud-sun fa-5x text-primary mb-4"></i>
+                    <h2 class="mb-3">Welcome to Weather Dashboard</h2>
+                    <p class="lead text-muted mb-4">Search for any city to get current weather and forecast information</p>
+                    <ul class="list-unstyled text-muted">
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Real-time weather data</li>
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> 5-day forecast</li>
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Hourly forecast</li>
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Weather alerts</li>
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Geolocation support</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-4 mt-5 text-center">
+        <div class="container">
+            <p class="mb-1">Weather Dashboard &copy; 2026</p>
+            <p class="text-muted mb-0">
+                Data provided by <a href="https://openweathermap.org/" target="_blank" class="text-light">OpenWeatherMap</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="js/storage.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/weather-api.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
